@@ -1,9 +1,15 @@
 news_sites:
   new_york_times:
-    url: https://www.nytimes.com/
+    url: https://www.nytimes.com
     queries:
       homepage_article_links: '.css-6p6lnl a'
+      article_body: '.evys1bk0'
+      article_subtitle: '#article-summary'
+      article_title: '.css-1vkm6nb h1'
   the_economist:
-    url: https://www.economist.com/
+    url: https://www.economist.com
     queries:
       homepage_article_links: '.headline-link'
+      article_body: '.article__body-text'
+      article_subtitle: '.article__description'
+      article_title: '.article__headline'

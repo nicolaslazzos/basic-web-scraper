@@ -1,2 +1,2 @@
-# basic-web-scrapper
-Basic web scrapper example with python.
+# basic-web-scraper
+Basic web scraper example with python.
