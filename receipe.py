@@ -25,6 +25,11 @@ def main(filename):
     df = _remove_escape_chars(df)
     df = _tokenize_column(df, 'title')
     df = _tokenize_column(df, 'body')
+    df = _remove_duplicates(df, 'title')
+    df = _remove_duplicates(df, 'url')
+    df = _drop_rows_with_missing_data(df)
+
+    _save_data(df, filename)
 
     return df
 
@@ -80,6 +85,7 @@ def _remove_escape_chars(df):
 
 
 def _tokenize_column(df, column_name):
+    logger.info('Tokenizing {} column'.format(column_name))
     tokenized = (df.apply(lambda row: nltk.word_tokenize(row[column_name]), axis=1)
                  .apply(lambda tokens: list(filter(lambda token: token.isalpha(), tokens)))
                  .apply(lambda tokens: list(map(lambda token: token.lower(), tokens)))
@@ -87,6 +93,23 @@ def _tokenize_column(df, column_name):
 
     df['n_tokens_{}'.format(column_name)] = tokenized
     return df
+
+
+def _remove_duplicates(df, column_name):
+    logger.info('Removing duplicate entries from {} column'.format(column_name))
+    df.drop_duplicates(subset=[column_name], keep='first', inplace=True)
+    return df
+
+
+def _drop_rows_with_missing_data(df):
+    logger.info('Removing rows with missing data')
+    return df.dropna()
+
+
+def _save_data(df, filename):
+    clean_filename = 'clean_{}'.format(filename)
+    logger.info('Exporting datafram to {}'.format(clean_filename))
+    df.to_csv(clean_filename)
 
 
 if __name__ == '__main__':
