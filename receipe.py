@@ -107,7 +107,7 @@ def _drop_rows_with_missing_data(df):
 
 
 def _save_data(df, filename):
-    clean_filename = 'clean_{}'.format(filename)
+    clean_filename = 'clean-{}'.format(filename)
     logger.info('Exporting datafram to {}'.format(clean_filename))
     df.to_csv(clean_filename)
 

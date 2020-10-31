@@ -26,7 +26,6 @@ def _news_scraper(site_id):
     articles = []
 
     for link in homepage.article_links:
-        # print(link)
         article = _fetch_article(site_id, host, link)
 
         if article:

@@ -20,3 +20,10 @@ news_sites:
       article_body: '.gl-Grid_7nota p'
       article_subtitle: '.Encabezado-Articulo h2'
       article_title: '.Encabezado-Articulo h1'
+  el_pais:
+    url: 'https://elpais.com'
+    queries:
+      homepage_article_links: '.headline a'
+      article_body: '.article_body p'
+      article_subtitle: '#article_header h2'
+      article_title: '#article_header h1'
