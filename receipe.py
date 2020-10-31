@@ -3,9 +3,13 @@ import logging
 import pandas as pd
 import hashlib
 from urllib.parse import urlparse
+import nltk
+from nltk.corpus import stopwords
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+stop_words = set(stopwords.words('spanish'))
 
 
 def main(filename):
@@ -19,6 +23,8 @@ def main(filename):
     df = _fill_missing_titles(df)
     df = _set_rows_uids(df)
     df = _remove_escape_chars(df)
+    df = _tokenize_column(df, 'title')
+    df = _tokenize_column(df, 'body')
 
     return df
 
@@ -70,6 +76,16 @@ def _remove_escape_chars(df):
     stripped_body = df.apply(lambda row: row['body'].replace(
         '\n', '').replace('\r', ''), axis=1)
     df['body'] = stripped_body
+    return df
+
+
+def _tokenize_column(df, column_name):
+    tokenized = (df.apply(lambda row: nltk.word_tokenize(row[column_name]), axis=1)
+                 .apply(lambda tokens: list(filter(lambda token: token.isalpha(), tokens)))
+                 .apply(lambda tokens: list(map(lambda token: token.lower(), tokens)))
+                 .apply(lambda words_list: len(list(filter(lambda word: word not in stop_words, words_list)))))
+
+    df['n_tokens_{}'.format(column_name)] = tokenized
     return df
 
 
