@@ -1,6 +1,7 @@
 import argparse
 import logging
 import pandas as pd
+import hashlib
 from urllib.parse import urlparse
 
 logging.basicConfig(level=logging.INFO)
@@ -16,6 +17,8 @@ def main(filename):
     df = _add_column(df, 'site_id', site_id)
     df = _extract_host(df)
     df = _fill_missing_titles(df)
+    df = _set_rows_uids(df)
+    df = _remove_escape_chars(df)
 
     return df
 
@@ -43,12 +46,32 @@ def _extract_host(df):
     df['host'] = df['url'].apply(lambda url: urlparse(url).netloc)
     return df
 
+
 def _fill_missing_titles(df):
     logger.info('Filling missing titles')
     missing_titles_mask = df['title'].isna()
-    missing_titles = df[missing_titles_mask]['url'].str.extract(r'(?P<missing_titles>[^/]+)$').applymap(lambda title: title.replace('-', ' '))
+    missing_titles = df[missing_titles_mask]['url'].str.extract(
+        r'(?P<missing_titles>[^/]+)$').applymap(lambda title: title.replace('-', ' '))
     df.loc[missing_titles_mask, 'title'] = missing_titles.loc[:, 'missing_titles']
     return df
+
+
+def _set_rows_uids(df):
+    logger.info('Setting rows uids')
+    uids = df.apply(lambda row: hashlib.md5(
+        bytes(row['url'].encode())).hexdigest(), axis=1)
+    df['uid'] = uids
+    df.set_index('uid', inplace=True)
+    return df
+
+
+def _remove_escape_chars(df):
+    logger.info('Removing escape characters from body')
+    stripped_body = df.apply(lambda row: row['body'].replace(
+        '\n', '').replace('\r', ''), axis=1)
+    df['body'] = stripped_body
+    return df
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -58,4 +81,4 @@ if __name__ == '__main__':
 
     df = main(args.filename)
 
-    print(df['title'])
+    print(df)
