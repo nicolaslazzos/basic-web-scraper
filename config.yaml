@@ -1,0 +1,9 @@
+news_sites:
+  new_york_times:
+    url: https://www.nytimes.com/
+    queries:
+      homepage_article_links: '.css-6p6lnl a'
+  the_economist:
+    url: https://www.economist.com/
+    queries:
+      homepage_article_links: '.headline-link'
