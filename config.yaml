@@ -13,3 +13,10 @@ news_sites:
       article_body: '.article__body-text'
       article_subtitle: '.article__description'
       article_title: '.article__headline'
+  el_universal:
+    url: 'https://www.eluniversal.com.mx'
+    queries:
+      homepage_article_links: '[class*=_Titulo] a'
+      article_body: '.gl-Grid_7nota p'
+      article_subtitle: '.Encabezado-Articulo h2'
+      article_title: '.Encabezado-Articulo h1'

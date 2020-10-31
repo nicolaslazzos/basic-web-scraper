@@ -32,6 +32,7 @@ def _news_scraper(site_id):
         if article:
             logger.info('Article fetched')
             articles.append(article)
+            print(article.title)
 
     print(len(articles))
 
@@ -40,7 +41,7 @@ def _news_scraper(site_id):
 
 def _save_articles(site_id, articles):
     now = datetime.now().strftime('%Y_%m_%d')
-    file_name = '{}_{}_articles.csv'.format(site_id, now)
+    file_name = '{}-{}-articles.csv'.format(site_id, now)
 
     # filtering @properties to get headers because python recognize them as functions by default
     csv_headers = list(
